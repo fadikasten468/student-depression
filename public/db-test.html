@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Depression</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        button { background: green; color: white; padding: 10px; margin: 5px; cursor: pointer; }
+        table { border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background: green; color: white; }
+        canvas { max-width: 800px; margin-top: 30px; }
+    </style>
+</head>
+<body>
+
+<h1>Student Depression Analysis</h1>
+
+<button onclick="fetchData('pressure')">Studietryck vs Depression</button>
+<button onclick="fetchData('sleep')">Sömn vs Depression</button>
+<button onclick="fetchData('finance')">Ekonomi vs Depression</button>
+
+<div id="result"></div>
+<canvas id="myChart"></canvas>
+
+<script>
+async function fetchData(type) {
+    let url = '/api/' + type;
+    let response = await fetch(url);
+    let data = await response.json();
+    
+    if (data.error) {
+        document.getElementById('result').innerHTML = 'Fel: ' + data.error;
+        return;
+    }
+    
+    let labels = data.map(x => {
+        if (type === 'pressure') return x.pressure;
+        if (type === 'sleep') return x.sleep;
+        if (type === 'finance') return x.stress;
+    });
+    
+    let values = data.map(x => x.depressedPercent);
+    
+    // Visa tabell
+    let html = '<table>';
+    html += '<tr><th>Kategori</th><th>Depression (%)</th></tr>';
+    for (let i = 0; i < labels.length; i++) {
+        html += `<tr><td>${labels[i]}</td><td>${values[i]}%</td></tr>`;
+    }
+    html += '</table>';
+    document.getElementById('result').innerHTML = html;
+    
+    // Rita diagram
+    new Chart(document.getElementById('myChart'), {
+        type: 'bar',
+        data: { labels: labels, datasets: [{ label: 'Depression (%)', data: values, backgroundColor: 'steelblue' }] }
+    });
+}
+</script>
+
+</body>
+</html>

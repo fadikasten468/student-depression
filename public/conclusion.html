@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Conclusion</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <h1>Conclusion</h1>
+
+    <h2>What did I find?</h2>
+
+    <p><strong>Academic Pressure:</strong> Students with higher academic pressure (4-5) have significantly higher depression rates.</p>
+
+    <p><strong>Sleep Duration:</strong> Students who sleep less than 5 hours have the highest depression rates. Students sleeping 7-8 hours have the lowest.</p>
+
+    <p><strong>Financial Stress:</strong> Higher financial stress is clearly linked to higher depression rates.</p>
+
+    <h2>Statistics (Age)</h2>
+
+    <ul id="stats">
+        <li>Loading statistics...</li>
+    </ul>
+
+    <script>
+        fetch("/api/statistics")
+            .then(response => response.json())
+            .then(data => {
+
+                document.getElementById("stats").innerHTML = `
+                <li><strong>Mean Age:</strong> ${data.mean} years</li>
+                <li><strong>Median Age:</strong> ${data.median} years</li>
+                <li><strong>Standard Deviation:</strong> ${data.standardDeviation}</li>
+                `;
+
+            });
+    </script>
+
+    <h2>Recommendations</h2>
+
+    <ul>
+        <li>Reduce academic pressure for students.</li>
+        <li>Promote better sleep habits (7-8 hours).</li>
+        <li>Provide financial support for students with high financial stress.</li>
+    </ul>
+
+    <p>
+        This analysis suggests that academic pressure, financial stress and sleep duration are important factors associated with depression among university students.
+    </p>
+
+    <p>
+        <a href="index.html">Back to start</a>
+    </p>
+
+</body>
+
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sleep Duration</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <h1>Sleep Duration vs Depression</h1>
+
+    <canvas id="chart" style="max-width:800px; margin:auto;"></canvas>
+
+    <h2>Results Table</h2>
+
+    <table border="1" cellpadding="8" cellspacing="0" id="sleepTable">
+        <thead>
+            <tr>
+                <th>Sleep Duration</th>
+                <th>Depression (%)</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script>
+
+        fetch("/api/sleep")
+            .then(res => res.json())
+            .then(data => {
+
+                // Diagram
+                new Chart(document.getElementById("chart"), {
+                    type: "bar",
+                    data: {
+                        labels: data.map(x => x.sleep),
+                        datasets: [{
+                            label: "Depression (%)",
+                            data: data.map(x => x.depressedPercent),
+                            backgroundColor: "steelblue"
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: "Depression (%)"
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Tabell
+                const tbody = document.querySelector("#sleepTable tbody");
+
+                data.forEach(row => {
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${row.sleep}</td>
+                            <td>${row.depressedPercent}%</td>
+                        </tr>
+                    `;
+
+                });
+
+            })
+            .catch(err => console.log(err));
+
+    </script>
+
+    <p>
+        <a href="index.html">Back to start</a>
+    </p>
+
+</body>
+
+</html>

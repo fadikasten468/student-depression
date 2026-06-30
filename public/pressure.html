@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Academic Pressure</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Academic Pressure vs Depression</h1>
+    <canvas id="chart" style="max-width:800px; margin:auto;"></canvas>
+    <script>
+        fetch("/api/pressure")
+            .then(res => res.json())
+            .then(data => {
+                new Chart(document.getElementById("chart"), {
+                    type: "bar",
+                    data: {
+                        labels: data.map(x => x.pressure),
+                        datasets: [{
+                            label: "Depression (%)",
+                            data: data.map(x => x.depressedPercent),
+                            backgroundColor: "steelblue"
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: { title: { display: true, text: "Depression (%)" } },
+                            x: { title: { display: true, text: "Academic Pressure (1-5)" } }
+                        }
+                    }
+                });
+            })
+            .catch(err => console.log("Error:", err));
+    </script>
+    <p><a href="index.html">Back to start</a></p>
+</body>
+</html>
